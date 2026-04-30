@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>Catalogue Tarifs — Centre Esthétique Ecusson</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #faf6f0;
+  --ivory: #f2ebe0;
+  --gold: #b8924a;
+  --gold2: #d4aa6a;
+  --gold-pale: #f0e4cc;
+  --dark: #1c1410;
+  --brown: #4a3828;
+  --taupe: #8a7060;
+  --white: #ffffff;
+  --shadow: rgba(28,20,16,0.18);
+}
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+width: 100%; height: 100%;
+overflow: hidden;
+background: #2a1e14;
+color-scheme: only light;
+font-family: ‘Jost’, sans-serif;
+}
+
+/* ── SCENE ── */
+#scene {
+position: fixed; inset: 0;
+display: flex; align-items: center; justify-content: center;
+background: radial-gradient(ellipse at 50% 40%, #3a2a1c 0%, #1a1008 100%);
+perspective: 2000px;
+}
+
+/* ── BOOK CONTAINER ── */
+#book-wrap {
+position: relative;
+width: min(88vw, calc(88vh * 0.65));
+height: min(88vh, calc(88vw / 0.65));
+transform-style: preserve-3d;
+}
+
+/* ── BOOK SHADOW ── */
+#book-wrap::after {
+content: ‘’;
+position: absolute;
+bottom: -4%;
+left: 5%; right: 5%;
+height: 6%;
+background: radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, transparent 70%);
+filter: blur(8px);
+}
+
+/* ── BOOK ── */
+#book {
+position: relative;
+width: 100%; height: 100%;
+transform-style: preserve-3d;
+}
+
+/* ── PAGES ── */
+.page {
+position: absolute;
+top: 0; right: 0;
+width: 100%; height: 100%;
+transform-origin: left center;
+transform-style: preserve-3d;
+transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+cursor: pointer;
+}
+
+.page.turning { z-index: 10; }
+.page.turned { transform: rotateY(-180deg); }
+
+/* Faces avant/arrière */
+.page-front, .page-back {
+position: absolute;
+inset: 0;
+backface-visibility: hidden;
+-webkit-backface-visibility: hidden;
+border-radius: 2px 6px 6px 2px;
+overflow: hidden;
+box-shadow: 4px 0 20px var(–shadow), inset -2px 0 8px rgba(0,0,0,0.08);
+}
+
+.page-back {
+transform: rotateY(180deg);
+border-radius: 6px 2px 2px 6px;
+box-shadow: -4px 0 20px var(–shadow), inset 2px 0 8px rgba(0,0,0,0.06);
+}
+
+/* Reliure ombre */
+.page-front::before {
+content: ‘’;
+position: absolute;
+left: 0; top: 0; bottom: 0;
+width: 18px;
+background: linear-gradient(to right, rgba(0,0,0,0.08), transparent);
+z-index: 2;
+}
+
+/* ── COUVERTE ── */
+.cover-page {
+background: linear-gradient(145deg, #2a1e14 0%, #1c1208 50%, #2e2010 100%);
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+padding: 8%;
+position: relative;
+overflow: hidden;
+}
+
+.cover-page::before {
+content: ‘’;
+position: absolute; inset: 0;
+background:
+radial-gradient(ellipse at 20% 20%, rgba(184,146,74,0.12) 0%, transparent 50%),
+radial-gradient(ellipse at 80% 80%, rgba(184,146,74,0.08) 0%, transparent 40%);
+}
+
+.cover-border {
+position: absolute;
+inset: 4%;
+border: 1px solid rgba(184,146,74,0.25);
+pointer-events: none;
+}
+.cover-border::before {
+content: ‘’;
+position: absolute;
+inset: 4px;
+border: 1px solid rgba(184,146,74,0.12);
+}
+
+.cover-ornament {
+width: 60%;
+margin-bottom: 6%;
+opacity: 0.9;
+}
+
+.cover-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(1.4rem, 5vw, 2.4rem);
+font-weight: 300;
+color: var(–gold2);
+text-align: center;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+line-height: 1.2;
+position: relative; z-index: 2;
+}
+
+.cover-subtitle {
+font-size: clamp(0.45rem, 1.3vw, 0.6rem);
+letter-spacing: 0.5em;
+text-transform: uppercase;
+color: rgba(212,170,106,0.6);
+margin-top: 3%;
+position: relative; z-index: 2;
+}
+
+.cover-divider {
+width: 40px; height: 1px;
+background: linear-gradient(to right, transparent, var(–gold), transparent);
+margin: 4% auto;
+position: relative; z-index: 2;
+}
+
+.cover-hint {
+position: absolute;
+bottom: 8%;
+font-size: clamp(0.42rem, 1.1vw, 0.54rem);
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: rgba(184,146,74,0.4);
+display: flex; align-items: center; gap: 8px;
+z-index: 2;
+animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 0.4; }
+50% { opacity: 0.9; }
+}
+
+/* ── PAGES INTÉRIEURES ── */
+.inner-page {
+background: var(–cream);
+padding: 6% 7%;
+display: flex;
+flex-direction: column;
+position: relative;
+}
+
+.inner-page::after {
+content: ‘’;
+position: absolute;
+bottom: 0; left: 0; right: 0;
+height: 4px;
+background: linear-gradient(to right, transparent, rgba(184,146,74,0.15), transparent);
+}
+
+/* Numéro de page */
+.page-num {
+position: absolute;
+bottom: 4%;
+font-size: clamp(0.4rem, 1vw, 0.52rem);
+letter-spacing: 0.3em;
+color: rgba(184,146,74,0.4);
+font-family: ‘Cormorant Garamond’, serif;
+}
+.page-num-left { left: 6%; }
+.page-num-right { right: 6%; }
+
+/* Header de page */
+.page-cat-label {
+font-size: clamp(0.42rem, 1.1vw, 0.54rem);
+letter-spacing: 0.45em;
+text-transform: uppercase;
+color: var(–gold);
+margin-bottom: 2%;
+font-weight: 400;
+}
+
+.page-cat-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(1.4rem, 5vw, 2.2rem);
+font-weight: 300;
+color: var(–dark);
+line-height: 1;
+margin-bottom: 4%;
+padding-bottom: 3%;
+border-bottom: 1px solid rgba(184,146,74,0.2);
+}
+.page-cat-title em { font-style: italic; color: var(–gold); }
+
+/* Tableau tarifs */
+.tarif-table {
+width: 100%;
+border-collapse: collapse;
+flex: 1;
+}
+
+.tarif-table tr {
+border-bottom: 1px solid rgba(74,56,40,0.07);
+transition: background 0.15s;
+}
+.tarif-table tr:last-child { border-bottom: none; }
+.tarif-table tr:nth-child(even) td { background: rgba(242,235,224,0.5); }
+
+.tarif-table td {
+padding: clamp(5px, 1.3vw, 9px) clamp(4px, 1vw, 7px);
+font-size: clamp(0.52rem, 1.3vw, 0.66rem);
+font-weight: 300;
+color: var(–dark);
+vertical-align: middle;
+line-height: 1.4;
+}
+
+.tarif-table td:last-child {
+text-align: right;
+font-weight: 500;
+color: var(–gold);
+white-space: nowrap;
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(0.65rem, 1.7vw, 0.85rem);
+padding-left: 4%;
+}
+
+.tarif-sub {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(0.9rem, 3vw, 1.3rem);
+font-weight: 400;
+color: var(–brown);
+margin: 3% 0 2%;
+padding-bottom: 1.5%;
+border-bottom: 1px solid rgba(184,146,74,0.1);
+}
+
+/* Décoration coin */
+.corner-deco {
+position: absolute;
+width: 30px; height: 30px;
+opacity: 0.2;
+}
+.corner-tl { top: 3%; left: 3%; border-top: 1px solid var(–gold); border-left: 1px solid var(–gold); }
+.corner-br { bottom: 3%; right: 3%; border-bottom: 1px solid var(–gold); border-right: 1px solid var(–gold); }
+
+/* ── NAVIGATION ── */
+#nav-prev, #nav-next {
+position: fixed;
+top: 50%;
+transform: translateY(-50%);
+background: rgba(184,146,74,0.15);
+border: 1px solid rgba(184,146,74,0.3);
+color: var(–gold2);
+font-size: clamp(1rem, 3vw, 1.5rem);
+width: clamp(36px, 6vw, 50px);
+height: clamp(36px, 6vw, 50px);
+display: flex; align-items: center; justify-content: center;
+cursor: pointer;
+transition: all 0.25s;
+z-index: 100;
+backdrop-filter: blur(4px);
+border-radius: 2px;
+}
+#nav-prev { left: 2%; }
+#nav-next { right: 2%; }
+#nav-prev:hover, #nav-next:hover {
+background: rgba(184,146,74,0.35);
+border-color: var(–gold);
+}
+
+/* ── CLOSE ── */
+#close-btn {
+position: fixed;
+top: 3%; right: 3%;
+background: rgba(184,146,74,0.15);
+border: 1px solid rgba(184,146,74,0.3);
+color: var(–gold2);
+font-size: clamp(0.5rem, 1.3vw, 0.65rem);
+letter-spacing: 0.25em;
+text-transform: uppercase;
+padding: 8px 16px;
+cursor: pointer;
+z-index: 100;
+font-family: ‘Jost’, sans-serif;
+transition: all 0.25s;
+backdrop-filter: blur(4px);
+}
+#close-btn:hover { background: rgba(184,146,74,0.3); }
+
+/* ── PROGRESS ── */
+#progress {
+position: fixed;
+bottom: 4%;
+left: 50%; transform: translateX(-50%);
+display: flex; gap: 8px; z-index: 100;
+}
+.prog-dot {
+width: 20px; height: 2px;
+background: rgba(184,146,74,0.25);
+transition: all 0.3s; cursor: pointer;
+}
+.prog-dot.active { background: var(–gold2); width: 32px; }
+
+/* ── PAGE COUNTER ── */
+#page-counter {
+position: fixed;
+bottom: 4%; right: 3%;
+font-size: clamp(0.42rem, 1.1vw, 0.54rem);
+letter-spacing: 0.3em;
+color: rgba(184,146,74,0.5);
+font-family: ‘Cormorant Garamond’, serif;
+z-index: 100;
+}
+
+/* ── 4TH COVER (back) ── */
+.back-cover {
+background: linear-gradient(145deg, #1c1208 0%, #2a1e14 100%);
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+padding: 10%;
+position: relative;
+}
+.back-cover::before {
+content: ‘’;
+position: absolute; inset: 0;
+background: radial-gradient(ellipse at 50% 50%, rgba(184,146,74,0.06) 0%, transparent 70%);
+}
+.back-cover-logo {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(1rem, 3.5vw, 1.6rem);
+font-weight: 300;
+color: rgba(212,170,106,0.7);
+letter-spacing: 0.2em;
+text-transform: uppercase;
+text-align: center;
+position: relative; z-index: 2;
+}
+.back-cover-url {
+font-size: clamp(0.42rem, 1.1vw, 0.54rem);
+letter-spacing: 0.35em;
+color: rgba(184,146,74,0.4);
+margin-top: 4%;
+position: relative; z-index: 2;
+}
+
+/* Touch swipe */
+#book-wrap { touch-action: pan-y; }
+</style>
+
+</head>
+<body>
+<div id="scene">
+  <div id="book-wrap">
+    <div id="book">
+      <!-- Les pages sont générées par JS -->
+    </div>
+  </div>
+</div>
+
+<button id="nav-prev" onclick="prevPage()">←</button>
+<button id="nav-next" onclick="nextPage()">→</button>
+<button id="close-btn" onclick="window.close()">✕ Fermer</button>
+
+<div id="progress"></div>
+<div id="page-counter"></div>
+
+<script>
+// ── DONNÉES CATALOGUE ──
+const catalogue = [
+  {
+    label: "Injectables",
+    title: "Acide Hyaluronique",
+    pages: [
+      {
+        subtitle: null,
+        rows: [
+          ["1 ml AH volume visage", "250 €"],
+          ["2 ml AH volume visage", "400 €"],
+          ["3 ml AH volume visage", "500 €"],
+          ["Au delà de 3 ml", "100 € / ml suppl."],
+          ["Lèvre rouge/blanche", "250 € / seringue"],
+          ["Cernes", "430 € / seringue"],
+          ["Rhinoplastie médicale", "à partir de 550 €"],
+          ["Hydratation intime femme", "380 € / séance"],
+          ["Reconstruction grandes lèvres", "600 € / séance"],
+        ]
+      },
+      {
+        subtitle: "Skin Relax",
+        rows: [
+          ["Front, glabelle, patte d'oie — dose normale", "250 €"],
+          ["Front, glabelle, patte d'oie — double dose", "400 €"],
+          ["Cou", "380 €"],
+          ["Décolleté", "450 €"],
+          ["Cou + Décolleté", "650 €"],
+        ],
+        subtitle2: "Skinboosters",
+        rows2: [
+          ["AH Skinboosters 3 ml visage ou corps", "260 € / seringue"],
+          ["Mésothérapie cuir chevelu ADN", "180 € / seringue"],
+          ["REJURAN© régénération ADN, cernes", "450 € / 2 ml"],
+          ["KARISMA© skinbooster collagène", "450 € / ampoule"],
+        ]
+      }
+    ]
+  },
+  {
+    label: "Épilation",
+    title: "Épilation Laser",
+    pages: [
+      {
+        subtitle: "Femme — Prix par séance (Assistante / Dr)",
+        rows: [
+          ["Consultation initiale", "Gratuite"],
+          ["Lèvre supérieure", "30 € / 60 €"],
+          ["Menton", "30 € / 60 €"],
+          ["Tour de bouche", "35 € / 70 €"],
+          ["Visage entier", "85 € / 170 €"],
+          ["Maillot classique", "40 € / 80 €"],
+          ["Maillot intégral + SIF", "80 € / 160 €"],
+          ["Aisselles", "40 € / 80 €"],
+          ["Demi-jambes", "105 € / 210 €"],
+          ["Jambes entières", "200 € / 400 €"],
+          ["Bras entier", "125 € / 250 €"],
+        ]
+      },
+      {
+        subtitle: "Forfaits Femme",
+        rows: [
+          ["Maillot + SIF + Aisselles", "100 € / 200 €"],
+          ["½ jambes + Maillot + SIF + Aisselles", "210 € / 420 €"],
+          ["Jambes + Maillot + SIF + Aisselles", "300 € / 550 €"],
+          ["Corps Total", "450 € / 900 €"],
+        ],
+        subtitle2: "Homme — Prix par séance (Assistante / Dr)",
+        rows2: [
+          ["Barbe complète", "80 € / 160 €"],
+          ["Dos entier", "150 € / 300 €"],
+          ["Torse", "95 € / 190 €"],
+          ["Aisselles", "45 € / 90 €"],
+          ["Jambes entières + pieds", "260 € / 520 €"],
+          ["Corps entier", "750 € / 1500 €"],
+        ]
+      },
+      {
+        subtitle: "Forfaits Homme",
+        rows: [
+          ["Dos + épaules + nuque", "250 € / 500 €"],
+          ["Torse + ventre + cou", "230 € / 460 €"],
+          ["Fesses + maillot complet", "200 € / 400 €"],
+          ["Corps entier complet", "750 € / 1500 €"],
+        ],
+        subtitle2: "Épilation Électrique",
+        rows2: [
+          ["Toutes zones", "50 € / 15 min"],
+        ]
+      }
+    ]
+  },
+  {
+    label: "Laser & Peau",
+    title: "Laser Nordlys",
+    pages: [
+      {
+        subtitle: "Plateforme Nordlys Candela Medical",
+        rows: [
+          ["Télangiectasies visage", "à partir de 150 €"],
+          ["Taches du visage", "200 € / séance"],
+          ["Taches visage + cou", "250 € / séance"],
+          ["Taches visage + cou + décolleté", "350 € / séance"],
+          ["Remise en tension (Frax 1550)", "à partir de 250 €"],
+          ["Relissage cicatrices", "à partir de 250 €"],
+          ["Relissage superficiel FRAX 1940", "à partir de 150 €"],
+          ["Bright & Glow (IPL + Frax 1940)", "à partir de 250 €"],
+          ["Full Restoration (IPL + Frax 1550+1940)", "à partir de 450 €"],
+          ["Full Frax (Frax 1550 + 1940)", "à partir de 350 €"],
+        ]
+      },
+      {
+        subtitle: "Peeling",
+        rows: [
+          ["Peeling moyen faible TCA", "150 €"],
+          ["Peeling moyen/fort TCA", "350 €"],
+          ["Masque Cosmelan — Melasma, taches", "800 €"],
+          ["Peeling TCA/Phénol fort", "à partir de 800 €"],
+          ["Hollywood Peel — visage entier", "250 €"],
+        ],
+        subtitle2: "Laser Vasculaire & Pigmentaire",
+        rows2: [
+          ["Télangiectasies jambes", "150 €"],
+          ["Couperose visage", "150 €"],
+          ["Couperose visage + décolleté", "250 €"],
+          ["Détatouage", "à partir de 100 €"],
+        ]
+      },
+      {
+        subtitle: "Microneedling",
+        rows: [
+          ["Visage ou corps", "à partir de 110 €"],
+        ],
+        subtitle2: "Photothérapie LED",
+        rows2: [
+          ["Visage ou corps", "à partir de 20 €"],
+        ]
+      }
+    ]
+  },
+  {
+    label: "Corps",
+    title: "Remodelage Corporel",
+    pages: [
+      {
+        subtitle: "Cryolipolyse CoolSculpting®",
+        rows: [
+          ["CoolAdvantage PLUS (ventre) — 1 à 4 applicateurs", "700 € / applicateur"],
+          ["CoolAdvantage PLUS — au delà de 4", "550 € / applicateur"],
+          ["CoolSmooth / Core / Fit / Curve", "550 € (400 € au delà de 4)"],
+          ["CoolMini (menton, genoux…)", "450 € (400 € au delà de 4)"],
+        ],
+        subtitle2: "Z Field Dual® — Développement Musculaire",
+        rows2: [
+          ["1 séance", "90 €"],
+          ["4 séances", "320 €"],
+          ["6 séances (le plus populaire)", "450 €"],
+          ["8 séances", "540 €"],
+          ["12 séances — programme DELUXE", "720 €"],
+        ]
+      },
+      {
+        subtitle: "EXILIS© Elite (BTL)",
+        rows: [
+          ["En fonction de la zone", "à partir de 200 €"],
+          ["Tarifs multizones", "nous consulter"],
+        ],
+        subtitle2: "BBL Médical — Augmentation Fessière",
+        rows2: [
+          ["1 à 20 seringues de 10 ml", "150 € / seringue"],
+          ["Au delà de 20 seringues", "100 € / seringue"],
+        ]
+      }
+    ]
+  },
+  {
+    label: "Soins Visage",
+    title: "Soins & Hydratation",
+    pages: [
+      {
+        subtitle: "Aquapure®",
+        rows: [
+          ["Soin Essentiel — 3 étapes", "95 €"],
+          ["Soin Luxe — 8 étapes", "150 €"],
+        ],
+        subtitle2: "HydraFacial Elite®",
+        rows2: [
+          ["Soin visage / cou global", "à partir de 130 €"],
+        ]
+      }
+    ]
+  },
+  {
+    label: "Fils & Plasma",
+    title: "Fils Tenseurs",
+    pages: [
+      {
+        subtitle: "Fils PDO Liftant — Maillage Standard",
+        rows: [
+          ["Visage + cou", "1 000 €"],
+          ["Visage complet", "750 €"],
+          ["Ovale", "550 €"],
+          ["Cou", "550 €"],
+          ["Patte d'oie ou contour bouche", "250 €"],
+        ],
+        subtitle2: "Fils Maillage Or 24K",
+        rows2: [
+          ["Visage + cou", "1 500 €"],
+          ["Visage complet", "1 125 €"],
+          ["Ovale", "825 €"],
+          ["Cou", "825 €"],
+        ]
+      },
+      {
+        subtitle: "Fils PDO Crantés",
+        rows: [
+          ["Lift PDO visage", "1 500 €"],
+          ["Lift PDO ovale", "750 €"],
+        ],
+        subtitle2: "Fils Permanents INFINITE THREADS©",
+        rows2: [
+          ["Lifting visage + cou", "4 000 € à 6 000 €"],
+          ["Lifting des sourcils", "1 800 €"],
+        ]
+      },
+      {
+        subtitle: "PLEXR® Plasma",
+        rows: [
+          ["Verrues", "100 €"],
+          ["Acné, cicatrices", "à partir de 600 €"],
+          ["Blépharoplastie 2 paupières", "800 €"],
+          ["Blépharoplastie 4 paupières", "1 200 €"],
+          ["Blépharoplastie 4 paupières + Poches", "1 500 €"],
+          ["Lift visage 1 zone", "800 €"],
+        ]
+      }
+    ]
+  }
+];
+
+// ── CONSTRUIRE LES PAGES ──
+const allPages = []; // {front, back}
+
+// Page 1 : couverture
+allPages.push({ type: 'cover' });
+
+// Pages par catégorie
+catalogue.forEach((cat, ci) => {
+  cat.pages.forEach((pg, pi) => {
+    allPages.push({ type: 'content', cat, pg, pageIndex: allPages.length });
+  });
+});
+
+// Dernière page : 4ème de couverture
+allPages.push({ type: 'backcover' });
+
+const totalPages = allPages.length;
+let currentPage = 0;
+let isAnimating = false;
+
+// ── BUILD DOM ──
+const book = document.getElementById('book');
+
+function buildPageDOM(pageData, index) {
+  const el = document.createElement('div');
+  el.className = 'page';
+  el.dataset.index = index;
+  el.style.zIndex = totalPages - index;
+
+  const front = document.createElement('div');
+  front.className = 'page-front';
+  const back = document.createElement('div');
+  back.className = 'page-back';
+
+  if (pageData.type === 'cover') {
+    front.className += ' cover-page';
+    front.innerHTML = `
+      <div class="cover-border"></div>
+      <svg class="cover-ornament" viewBox="0 0 300 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 150 10 L 160 35 L 185 35 L 165 50 L 173 75 L 150 60 L 127 75 L 135 50 L 115 35 L 140 35 Z" stroke="#b8924a" stroke-width="0.8" fill="rgba(184,146,74,0.08)"/>
+        <path d="M 10 40 Q 50 20 90 35 Q 110 40 130 38" stroke="#b8924a" stroke-width="0.6" fill="none" opacity="0.5"/>
+        <path d="M 290 40 Q 250 20 210 35 Q 190 40 170 38" stroke="#b8924a" stroke-width="0.6" fill="none" opacity="0.5"/>
+        <ellipse cx="15" cy="40" rx="5" ry="5" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <ellipse cx="285" cy="40" rx="5" ry="5" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <path d="M 60 35 Q 65 25 70 35 Q 75 45 80 35" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <path d="M 220 35 Q 225 25 230 35 Q 235 45 240 35" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.4"/>
+      </svg>
+      <div class="cover-title">Centre Esthétique<br>& Laser</div>
+      <div class="cover-divider"></div>
+      <div class="cover-subtitle">Catalogue Tarifs · Montpellier & Uzès</div>
+      <div class="cover-hint">
+        <span>Ouvrir</span>
+        <span>→</span>
+      </div>`;
+
+    // Back of cover = first content page summary
+    back.className += ' inner-page';
+    back.innerHTML = `
+      <div class="corner-deco corner-tl"></div>
+      <div class="corner-deco corner-br"></div>
+      <div class="page-cat-label">Sommaire</div>
+      <div class="page-cat-title">Nos <em>Prestations</em></div>
+      <table class="tarif-table">
+        ${catalogue.map((c, i) => `<tr><td>${i+1}. ${c.title}</td><td style="color:var(--taupe);font-family:'Jost',sans-serif;font-size:0.6rem;letter-spacing:0.2em">${c.label.toUpperCase()}</td></tr>`).join('')}
+      </table>
+      <div class="page-num page-num-right">Ecusson · Tarifs 2024</div>`;
+
+  } else if (pageData.type === 'backcover') {
+    front.className += ' inner-page';
+    front.innerHTML = `
+      <div class="corner-deco corner-tl"></div>
+      <div class="corner-deco corner-br"></div>
+      <div class="page-cat-label">Rendez-vous</div>
+      <div class="page-cat-title">Nous <em>Contacter</em></div>
+      <table class="tarif-table">
+        <tr><td>📍 Montpellier</td><td>Centre historique — Quartier Écusson</td></tr>
+        <tr><td>📍 Uzès</td><td>12 Rue Pelisserie, 30700 Uzès</td></tr>
+        <tr><td>📞 Uzès</td><td>09 87 32 72 97</td></tr>
+        <tr><td>🌐 Site</td><td>centreesthetiqueecusson.com</td></tr>
+        <tr><td>📅 Réservation</td><td>doctolib.fr</td></tr>
+      </table>
+      <div class="page-num page-num-right">Fermer →</div>`;
+
+    back.className += ' back-cover';
+    back.innerHTML = `
+      <div class="back-cover-logo">Centre Esthétique<br>& Laser</div>
+      <div style="width:40px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:5% auto;opacity:0.4"></div>
+      <div class="back-cover-url">centreesthetiqueecusson.com</div>`;
+
+  } else {
+    // Content page
+    const { cat, pg } = pageData;
+    front.className += ' inner-page';
+    front.innerHTML = buildContentHTML(cat, pg, index);
+
+    // Back = next page if exists
+    const nextPg = allPages[index + 1];
+    if (nextPg && nextPg.type === 'content') {
+      back.className += ' inner-page';
+      back.innerHTML = buildContentHTML(nextPg.cat, nextPg.pg, index + 1);
+    } else if (nextPg && nextPg.type === 'backcover') {
+      back.className += ' inner-page';
+      back.innerHTML = `
+        <div class="corner-deco corner-tl"></div>
+        <div class="corner-deco corner-br"></div>
+        <div class="page-cat-label">Rendez-vous</div>
+        <div class="page-cat-title">Nous <em>Contacter</em></div>
+        <table class="tarif-table">
+          <tr><td>📍 Montpellier</td><td>Centre historique — Quartier Écusson</td></tr>
+          <tr><td>📍 Uzès</td><td>12 Rue Pelisserie, 30700 Uzès</td></tr>
+          <tr><td>📞 Uzès</td><td>09 87 32 72 97</td></tr>
+          <tr><td>🌐 Site</td><td>centreesthetiqueecusson.com</td></tr>
+          <tr><td>📅 Réservation</td><td>doctolib.fr</td></tr>
+        </table>`;
+    } else {
+      back.className += ' inner-page';
+      back.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;opacity:0.2">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold)">✦</div></div>`;
+    }
+  }
+
+  el.appendChild(front);
+  el.appendChild(back);
+  return el;
+}
+
+function buildContentHTML(cat, pg, idx) {
+  let html = `
+    <div class="corner-deco corner-tl"></div>
+    <div class="corner-deco corner-br"></div>
+    <div class="page-cat-label">${cat.label}</div>
+    <div class="page-cat-title">${cat.title.replace(/(\w+)$/, '<em>$1</em>')}</div>`;
+
+  if (pg.subtitle) {
+    html += `<div class="tarif-sub">${pg.subtitle}</div>`;
+  }
+  html += `<table class="tarif-table">
+    ${pg.rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+  </table>`;
+
+  if (pg.subtitle2) {
+    html += `<div class="tarif-sub" style="margin-top:4%">${pg.subtitle2}</div>`;
+    html += `<table class="tarif-table">
+      ${pg.rows2.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+    </table>`;
+  }
+
+  html += `<div class="page-num page-num-right">${idx}</div>`;
+  return html;
+}
+
+// Build all pages
+allPages.forEach((pg, i) => {
+  const el = buildPageDOM(pg, i);
+  book.appendChild(el);
+});
+
+// ── NAVIGATION ──
+function goToPage(targetPage) {
+  if (isAnimating || targetPage === currentPage) return;
+  if (targetPage < 0 || targetPage >= totalPages) return;
+  isAnimating = true;
+
+  const pages = document.querySelectorAll('.page');
+
+  if (targetPage > currentPage) {
+    // Tourner vers l'avant
+    for (let i = currentPage; i < targetPage; i++) {
+      const page = pages[i];
+      setTimeout(() => {
+        page.classList.add('turning', 'turned');
+        page.style.zIndex = totalPages + i;
+      }, (i - currentPage) * 100);
+    }
+  } else {
+    // Tourner vers l'arrière
+    for (let i = currentPage - 1; i >= targetPage; i--) {
+      const page = pages[i];
+      setTimeout(() => {
+        page.classList.add('turning');
+        page.classList.remove('turned');
+        page.style.zIndex = totalPages - i;
+      }, (currentPage - 1 - i) * 100);
+    }
+  }
+
+  setTimeout(() => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('turning'));
+    currentPage = targetPage;
+    isAnimating = false;
+    updateUI();
+  }, 950 + Math.abs(targetPage - currentPage) * 100);
+
+  updateUI();
+}
+
+function nextPage() { goToPage(Math.min(currentPage + 1, totalPages - 1)); }
+function prevPage() { goToPage(Math.max(currentPage - 1, 0)); }
+
+function updateUI() {
+  // Progress dots
+  const prog = document.getElementById('progress');
+  prog.innerHTML = '';
+  allPages.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'prog-dot' + (i === currentPage ? ' active' : '');
+    d.onclick = () => goToPage(i);
+    prog.appendChild(d);
+  });
+
+  // Counter
+  document.getElementById('page-counter').textContent = `${currentPage + 1} / ${totalPages}`;
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextPage();
+  if (e.key === 'ArrowLeft') prevPage();
+  if (e.key === 'Escape') window.close();
+});
+
+// Touch swipe
+let touchStartX = 0;
+document.getElementById('book-wrap').addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+});
+document.getElementById('book-wrap').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (dx < -50) nextPage();
+  if (dx > 50) prevPage();
+});
+
+// Click on book
+document.getElementById('book-wrap').addEventListener('click', e => {
+  const rect = document.getElementById('book-wrap').getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  if (x > rect.width / 2) nextPage();
+  else prevPage();
+});
+
+updateUI();
+</script>
+
+</body>
+</html>
