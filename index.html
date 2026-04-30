@@ -3,7 +3,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Écusson Montpellier — Médecine Esthétique</title>
 <meta name="color-scheme" content="only light">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
@@ -51,8 +51,10 @@ color: var(–dark);
 .nav {
 position: absolute; top: 0; left: 0; right: 0; z-index: 100;
 display: flex; align-items: center; justify-content: space-between;
-padding: 1.8% 5%;
-background: linear-gradient(to bottom, rgba(250,246,240,0.98) 70%, transparent);
+padding: 2.5% 5% 2%;
+padding-top: max(2.5%, env(safe-area-inset-top));
+background: rgba(250,246,240,0.98);
+border-bottom: 1px solid rgba(184,146,74,0.15);
 }
 
 .logo {
@@ -177,7 +179,7 @@ SLIDE 2 — NOS SOINS
 ════════════════════════ */
 .slide-soins {
 background: var(–white);
-padding-top: 13%;
+padding-top: 16%;
 }
 
 .soins-intro {
@@ -256,7 +258,7 @@ SLIDE 3 — AVANT/APRÈS
 ════════════════════════ */
 .slide-aa {
 background: var(–white);
-padding-top: 12%;
+padding-top: 15%;
 }
 
 .aa-top {
@@ -345,7 +347,7 @@ SLIDE 4 — OFFRES
 ════════════════════════ */
 .slide-offre {
 background: linear-gradient(160deg, #faf6f0 0%, #f5ede0 100%);
-padding-top: 12%; overflow: hidden; position: relative;
+padding-top: 15%; overflow: hidden; position: relative;
 }
 
 .offre-deco {
@@ -440,7 +442,7 @@ border-top: 1px solid rgba(184,146,74,0.15);
 /* ════════════════════════
 SLIDE 5 — RDV
 ════════════════════════ */
-.slide-rdv { background: var(–white); padding-top: 12%; }
+.slide-rdv { background: var(–white); padding-top: 15%; }
 
 .rdv-hero {
 background: linear-gradient(135deg, var(–dark) 0%, #2c1e14 100%);
@@ -510,7 +512,9 @@ border-bottom: 1px solid rgba(74,56,40,0.08); display: flex; align-items: center
 .h-time { color: var(–dark); font-weight: 400; background: var(–white); }
 
 .rdv-cta {
-margin: 3% 8%; padding: clamp(12px, 2.8vw, 17px) 0;
+margin: 3% 8%;
+padding: clamp(12px, 2.8vw, 17px) 0;
+padding-bottom: max(clamp(12px, 2.8vw, 17px), env(safe-area-inset-bottom));
 background: var(–gold); color: var(–white);
 font-size: clamp(0.52rem, 1.4vw, 0.68rem); letter-spacing: 0.3em;
 text-transform: uppercase; font-weight: 500; text-align: center; flex-shrink: 0;
@@ -575,7 +579,7 @@ letter-spacing: 0.3em; text-transform: uppercase; padding: 12px 32px; cursor: po
 display: flex; align-items: center;
 }
 .logo-img {
-height: clamp(22px, 4.5vw, 34px);
+height: clamp(32px, 7vw, 48px);
 width: auto;
 object-fit: contain;
 filter: brightness(0.85) sepia(0.3) saturate(1.2);
@@ -586,7 +590,7 @@ SLIDE 6 — CATALOGUE
 ════════════════════════ */
 .slide-catalogue {
 background: var(–white);
-padding-top: 13%;
+padding-top: 16%;
 display: flex;
 flex-direction: column;
 }
@@ -709,24 +713,26 @@ font-size: clamp(0.7rem, 1.8vw, 0.9rem);
 
 /* Bouton catalogue sur slide 2 */
 .soin-catalogue-btn {
-margin: 2% 8% 3%;
-padding: clamp(10px, 2.5vw, 14px) 0;
-background: transparent;
-border: 1px solid var(–gold);
-color: var(–gold);
+margin: 2% 8% 4%;
+padding: clamp(12px, 3vw, 18px) 0;
+background: var(–gold);
+border: none;
+color: var(–white);
 font-family: ‘Jost’, sans-serif;
-font-size: clamp(0.5rem, 1.3vw, 0.64rem);
+font-size: clamp(0.55rem, 1.4vw, 0.68rem);
 letter-spacing: 0.3em;
 text-transform: uppercase;
-font-weight: 400;
+font-weight: 500;
 text-align: center;
 cursor: pointer;
 flex-shrink: 0;
 transition: all 0.25s;
 width: calc(100% - 16%);
+box-shadow: 0 2px 12px rgba(184,146,74,0.3);
+padding-bottom: max(clamp(12px, 3vw, 18px), env(safe-area-inset-bottom));
 }
 .soin-catalogue-btn:hover {
-background: var(–gold);
+background: var(–brown);
 color: var(–white);
 }
 
