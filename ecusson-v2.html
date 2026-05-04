@@ -59,7 +59,29 @@ img { display: block; max-width: 100%; }
 
 .h-display { font-family: var(--sans); font-weight: 200; font-size: clamp(48px, 8.5vw, 128px); line-height: 0.95; letter-spacing: -0.025em; text-transform: uppercase; }
 .h-display em { font-family: var(--serif); font-weight: 500; font-style: italic; color: var(--gold); text-transform: none; letter-spacing: -0.015em; display: inline-block; }
-.h-display .gold-grad { background: linear-gradient(135deg, var(--gold-2) 0%, var(--gold) 50%, var(--ink) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 600; }
+.h-display .gold-grad {
+  background: linear-gradient(90deg,
+    #8B6914 0%,
+    var(--gold) 15%,
+    var(--gold-2) 30%,
+    #fffbea 45%,
+    #fff8d0 50%,
+    #fffbea 55%,
+    var(--gold-2) 70%,
+    var(--gold) 85%,
+    #8B6914 100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  animation: gold-shimmer 4s ease-in-out infinite;
+}
+@keyframes gold-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -50% center; }
+}
 
 .h-section { font-family: var(--sans); font-weight: 200; font-size: clamp(40px, 6vw, 84px); line-height: 1.0; letter-spacing: -0.02em; text-transform: uppercase; }
 .h-section em { font-family: var(--serif); font-weight: 500; font-style: italic; color: var(--gold); text-transform: none; letter-spacing: -0.01em; }
